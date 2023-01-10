@@ -4,7 +4,7 @@ import "./styles.scss";
 
 
 
-
+//Empty allows a user to choose which time slot to book
 
 
 export default function Empty(props) {

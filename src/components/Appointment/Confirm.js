@@ -4,7 +4,7 @@ import "./styles.scss";
 
 
 
-
+//Confirm allows a user to confirm a destructive action
 
 
 

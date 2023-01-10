@@ -3,7 +3,7 @@ import "./styles.scss";
 
 
 
-
+//Header displays the time for the appointment
 
 
 

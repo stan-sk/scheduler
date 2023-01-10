@@ -3,7 +3,7 @@ import "./styles.scss";
 
 
 
-
+//Error informs the user when an error occurs
 
 
 

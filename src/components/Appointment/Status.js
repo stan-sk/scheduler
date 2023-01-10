@@ -3,7 +3,7 @@ import "./styles.scss";
 
 
 
-
+//Status informs the user that an operation is in progress
 
 
 
