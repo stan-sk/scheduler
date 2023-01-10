@@ -14,20 +14,22 @@ export default function InterviewerListItem(props) {
     }
   );
 
-  const renderName = (name, selected) => {
-    if (selected) {
-      return `${name}`;
-    }
-  }
+  // const renderName = (name, selected) => {
+  //   if (selected) {
+  //     return `${name}`;
+  //   }
+  // }
 
   return (
-    <li className={interviewerClass} onClick={() => setInterviewer(id)}>
+    <li className={interviewerClass} onClick={setInterviewer}>
     <img
       className="interviewers__item-image"
       src={avatar}
       alt={name}
     />
-    {renderName(name, selected)}
+    {/* {renderName(name, selected)} */}
+    {selected && name}
+
   </li>
   )
 }
