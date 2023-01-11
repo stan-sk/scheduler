@@ -67,15 +67,32 @@ const appointments = {
 
 export default function Application(props) {
 
-  const [day, setDay] = useState("Monday");
-  const [days, setDays] = useState([]);
+  // const [day, setDay] = useState("Monday");
+  // const [days, setDays] = useState([]);
+  // const [appointments, setAppointments] = useState({});
 
-  const daysApi = "http://localhost:8001/api/days"
+  // combine all useState above into one below
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    appointments: {}
+  });
+
+  // Even though we are combining all of the state into a single object, we can still have separate actions to update certain parts of the state
+  const setDay = day => setState({ ...state, day });
+
+  const setDays = days => setState(prev => ({ ...prev, days }));;
+
+  // const daysApi = "http://localhost:8001/api/days"
+
+  // useEffect(() => {
+  //   axios.get(daysApi)
+  //   .then(response => {setDays([...response.data])  
+  //   })
+  // }, []);
 
   useEffect(() => {
-    axios.get(daysApi)
-    .then(response => {setDays([...response.data])  
-    })
+    axios.get("/api/days").then(response => setDays(response.data));
   }, []);
 
 
@@ -90,8 +107,8 @@ export default function Application(props) {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList
-            days={days}
-            value={day}
+            days={state.days}
+            value={state.day}
             onChange={setDay}
           />
         </nav>
