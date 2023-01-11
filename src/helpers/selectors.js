@@ -32,25 +32,25 @@ export function getAppointmentsForDay(state, day) {
 // export function getAppointmentsForDay(state, day) {
 
 //   const result = [];
- 
+
 //   if (state.days.length === 0) {
 //     return [];
 //   }
 
 //   console.log("state.days ---->", state.days)
-  
+
 //   for (let obj of state.days) {
 //     console.log("obj ------>", obj)
-    
+
 //     if (obj.name === day) {
 //       console.log("------- name", obj.name, "----- day", day);
 //       for (let i of obj.appointments) {
-        
+
 //         if (i === state.appointments[i].id) {
 //           result.push(state.appointments[i])
 //         }
 //       }
-      
+
 //     }
 //     if (obj.name !== day) {
 //       return [] ;
@@ -59,3 +59,31 @@ export function getAppointmentsForDay(state, day) {
 //   }
 //   return result;
 // }
+
+
+export function getInterview(state, interview) {
+
+  if (!interview) {
+    return null
+  }
+
+  const interviewerId = interview.interviewer
+  const interviewers = state.interviewers
+
+  for (const id in interviewers) {
+    if (interviewerId === interviewers[id].id) {
+
+      const interviewDetails = {
+        student: interview.student,
+        interviewer: interviewers[id]
+      }
+
+      return interviewDetails
+    }
+  }
+
+}
+  
+
+
+
