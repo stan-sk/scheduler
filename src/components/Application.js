@@ -77,13 +77,12 @@ export default function Application(props) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: {}
+    appointments: {},
+    interviewers: {}
   });
 
   // Even though we are combining all of the state into a single object, we can still have separate actions to update certain parts of the state
   const setDay = day => setState({ ...state, day });
-
-  const setDays = days => setState(prev => ({ ...prev, days }));
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
@@ -105,7 +104,7 @@ export default function Application(props) {
       const appointments = all[1].data;
       const interviewers = all[2].data;
 
-      setState(prev => ({ ...prev, days, appointments}))
+      setState(prev => ({ ...prev, days, appointments, interviewers}))
     });
   }, []);
 
@@ -144,7 +143,7 @@ export default function Application(props) {
               key={appointment.id}
               id={appointment.id}
               time={appointment.time}
-              interview={appointment.interview}
+              interview={interview}
             />
           )})
         }
