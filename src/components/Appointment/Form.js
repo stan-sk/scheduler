@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import InterviewerList from "../InterviewerList";
+import React, { useState } from "react";
 import Button from "../Button";
-import "./styles.scss";
-
-
+import InterviewerList from "../InterviewerList";
 
 
 
@@ -11,6 +8,7 @@ export default function Form(props) {
 
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
+ console.log("student--->", student, "interviewer--->", interviewer)
 
   const reset = () => {
     setStudent("")

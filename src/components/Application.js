@@ -4,9 +4,128 @@ import axios from "axios";
 import DayList from "./DayList";
 import Appointment from "./Appointment/index";
 
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 import "components/Application.scss";
+
+
+export default function Application(props) {
+
+  // const [day, setDay] = useState("Monday");
+  // const [days, setDays] = useState([]);
+  // const [appointments, setAppointments] = useState({});
+
+  // combine all useState above into one below
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {}
+  });
+
+  console.log(state)
+
+  // Even though we are combining all of the state into a single object, we can still have separate actions to update certain parts of the state
+  const setDay = day => setState({ ...state, day });
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
+
+  const bookInterview = (id, interview) => {
+
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    setState({
+      ...state,
+      appointments
+    });
+  }
+
+
+
+  const appointmentComponent = dailyAppointments.map(appointment => {
+    const interview = getInterview(state, appointment.interview);
+   return (
+     <Appointment
+       key={appointment.id}
+       id={appointment.id}
+       time={appointment.time}
+       interview={interview}
+       interviewers={dailyInterviewers}
+       bookInterview={bookInterview}
+     />
+   )})
+ 
+
+  // const daysApi = "http://localhost:8001/api/days"
+
+  // useEffect(() => {
+  //   axios.get(daysApi)
+  //   .then(response => {setDays([...response.data])  
+  //   })
+  // }, []);
+
+  useEffect(() => {
+    Promise.all([
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers')
+    ]).then((all) => {
+      const days = all[0].data;
+      const appointments = all[1].data;
+      const interviewers = all[2].data;
+
+      setState(prev => ({ ...prev, days, appointments, interviewers}))
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   axios.get("/api/days").then(response => setDays(response.data));
+  // }, []);
+
+
+  return (
+    <main className="layout">
+      <section className="sidebar">
+        <img
+          className="sidebar--centered"
+          src="images/logo.png"
+          alt="Interview Scheduler"
+        />
+        <hr className="sidebar__separator sidebar--centered" />
+        <nav className="sidebar__menu">
+          <DayList
+            days={state.days}
+            value={state.day}
+            onChange={setDay}
+          />
+        </nav>
+        <img
+          className="sidebar__lhl sidebar--centered"
+          src="images/lhl.png"
+          alt="Lighthouse Labs"
+        />
+      </section>
+      <section className="schedule">
+        {appointmentComponent}
+        <Appointment key="last" time="5pm" bookInterview={bookInterview} />
+      </section>
+    </main>
+  );
+}
+
+
+
+
+
 
 // const days = [
 //   {
@@ -65,90 +184,3 @@ import "components/Application.scss";
 //     time: "4pm",
 //   }
 // };
-
-
-export default function Application(props) {
-
-  // const [day, setDay] = useState("Monday");
-  // const [days, setDays] = useState([]);
-  // const [appointments, setAppointments] = useState({});
-
-  // combine all useState above into one below
-  const [state, setState] = useState({
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {}
-  });
-
-  // Even though we are combining all of the state into a single object, we can still have separate actions to update certain parts of the state
-  const setDay = day => setState({ ...state, day });
-
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-
-  // const daysApi = "http://localhost:8001/api/days"
-
-  // useEffect(() => {
-  //   axios.get(daysApi)
-  //   .then(response => {setDays([...response.data])  
-  //   })
-  // }, []);
-
-  useEffect(() => {
-    Promise.all([
-      axios.get('/api/days'),
-      axios.get('/api/appointments'),
-      axios.get('/api/interviewers')
-    ]).then((all) => {
-      const days = all[0].data;
-      const appointments = all[1].data;
-      const interviewers = all[2].data;
-
-      setState(prev => ({ ...prev, days, appointments, interviewers}))
-    });
-  }, []);
-
-  // useEffect(() => {
-  //   axios.get("/api/days").then(response => setDays(response.data));
-  // }, []);
-
-
-  return (
-    <main className="layout">
-      <section className="sidebar">
-        <img
-          className="sidebar--centered"
-          src="images/logo.png"
-          alt="Interview Scheduler"
-        />
-        <hr className="sidebar__separator sidebar--centered" />
-        <nav className="sidebar__menu">
-          <DayList
-            days={state.days}
-            value={state.day}
-            onChange={setDay}
-          />
-        </nav>
-        <img
-          className="sidebar__lhl sidebar--centered"
-          src="images/lhl.png"
-          alt="Lighthouse Labs"
-        />
-      </section>
-      <section className="schedule">
-        {dailyAppointments.map(appointment => {
-           const interview = getInterview(state, appointment.interview);
-          return (
-            <Appointment
-              key={appointment.id}
-              id={appointment.id}
-              time={appointment.time}
-              interview={interview}
-            />
-          )})
-        }
-        <Appointment key="last" time="5pm" />
-      </section>
-    </main>
-  );
-}

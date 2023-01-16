@@ -86,4 +86,34 @@ export function getInterview(state, interview) {
   
 
 
+export function getInterviewersForDay(state, day) {
+  //... returns an array of interviewers for that day
+  const result = [];
 
+  // if no days data
+  if (!state.days.length) {
+    return result;
+  }
+  // filter through state for a specific day
+  const getDay = state.days.filter(x => x.name === day);
+
+  // if no data for a specific day
+  if (!getDay[0]) {
+    return result;
+  }
+
+  // get the interviewers IDs for that day
+  const interviewersForDay = getDay[0].interviewers;
+
+  // get details for all appointments
+  const interviewers = state.interviewers;
+
+  // get interviewers details for the specific day if id matches
+  interviewersForDay.forEach(id => {
+    if (id === interviewers[id].id) {
+      result.push(interviewers[id]);
+    }
+  });
+
+  return result;
+}

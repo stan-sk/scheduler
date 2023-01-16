@@ -78,7 +78,7 @@ storiesOf("DayList", module)
     <DayList days={days} value={"Tuesday"} onChange={action("setDay")} />
   ))
   .add("Wednesday", () => (
-    <DayList days={days} value={"Wednesday"} onCahnge={action("setDay")} />
+    <DayList days={days} value={"Wednesday"} onChange={action("setDay")} />
   ));
 
 
