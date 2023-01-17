@@ -27,6 +27,29 @@ export default function useApplicationData() {
     });
   }, []);
 
+  const updateSpots = (state, add = false) => {
+    // get the day you want to update
+    const updatedDay = state.days.filter((d) => d.name === state.day)[0];
+
+    if (add) {
+      // add spot if an interview is being cancelled
+      updatedDay.spots++;
+    } else {
+      // remove a spot if an interview is being booked
+      updatedDay.spots--;
+    }
+
+    // create a new days Array and replace the day with updatedDay
+    const days = state.days.map((day) => {
+      if (day.name === state.day) {
+        return updatedDay;
+      } else {
+        return day;
+      }
+    });
+
+    return days;
+  }; 
 
   const bookInterview = (id, interview) => {
 
@@ -43,9 +66,12 @@ export default function useApplicationData() {
         [id]: appointment
       };
 
+     const days = updateSpots(state);
+
       setState({
         ...state,
-        appointments
+        appointments,
+        days
       });
     })
   }
@@ -64,13 +90,18 @@ export default function useApplicationData() {
         ...state.appointments,
         [id]: appointment
       };
+
+      const days = updateSpots(state, true);
   
       setState({
         ...state,
-        appointments
+        appointments, 
+        days
       });
     })
   }
+
+ 
 
 
   return { state, setDay, bookInterview, cancelInterview }
