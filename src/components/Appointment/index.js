@@ -51,7 +51,7 @@ export default function Appointment(props) {
   }
 
   const destory = () => {
-    transition(DELETING)
+    transition(DELETING, true)
     const id = props.id
     props.cancelInterview(id)
     .then(() => transition(EMPTY))
