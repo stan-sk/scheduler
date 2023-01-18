@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios';
 
 export default function useApplicationData() {
@@ -27,29 +27,29 @@ export default function useApplicationData() {
     });
   }, []);
 
-  const updateSpots = (state, add = false) => {
-    // get the day you want to update
-    const updatedDay = state.days.filter((d) => d.name === state.day)[0];
+  const updateSpots = (state, appointments) => {
 
-    if (add) {
-      // add spot if an interview is being cancelled
-      updatedDay.spots++;
-    } else {
-      // remove a spot if an interview is being booked
-      updatedDay.spots--;
+    // get / find the day
+    const dayObj = state.days.find(d => d.name === state.day);
+
+    
+    // count the null appointments
+    let spots = 0
+    for (const id of dayObj.appointments) {
+      const appointment = appointments[id];
+      if (!appointment.interview) {
+        spots++
+      }
     }
 
-    // create a new days Array and replace the day with updatedDay
-    const days = state.days.map((day) => {
-      if (day.name === state.day) {
-        return updatedDay;
-      } else {
-        return day;
-      }
-    });
+    const day = {...dayObj, spots}
+    const days = state.days.map(d => d.name === state.day ? day : d);
 
+    // return an updated days array
     return days;
   }; 
+
+
 
   const bookInterview = (id, interview) => {
 
@@ -66,7 +66,7 @@ export default function useApplicationData() {
         [id]: appointment
       };
 
-     const days = updateSpots(state);
+      const days = updateSpots(state, appointments)
 
       setState({
         ...state,
@@ -76,9 +76,9 @@ export default function useApplicationData() {
     })
   }
 
-  const cancelInterview = (id, interview) => {
+  const cancelInterview = (id) => {
 
-    return axios.delete(`/api/appointments/${id}`, { interview })
+    return axios.delete(`/api/appointments/${id}`)
     .then((response) => {
     
       const appointment = {
@@ -91,7 +91,7 @@ export default function useApplicationData() {
         [id]: appointment
       };
 
-      const days = updateSpots(state, true);
+      const days = updateSpots(state, appointments)
   
       setState({
         ...state,
