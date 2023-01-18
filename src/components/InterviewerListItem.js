@@ -14,11 +14,6 @@ export default function InterviewerListItem(props) {
     }
   );
 
-  // const renderName = (name, selected) => {
-  //   if (selected) {
-  //     return `${name}`;
-  //   }
-  // }
 
   return (
     <li className={interviewerClass} onClick={setInterviewer}>
@@ -27,7 +22,7 @@ export default function InterviewerListItem(props) {
       src={avatar}
       alt={name}
     />
-    {/* {renderName(name, selected)} */}
+    
     {selected && name}
 
   </li>
