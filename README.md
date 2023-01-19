@@ -57,3 +57,8 @@ A user is shown a status indicator while asynchronous operations are in progress
 When the user presses the close button of the error they are returned to the Form or Show view (skipping Status and Confirm).
 
 The application makes API requests to load and persist data. We do not lose data after a browser refresh.
+
+
+
+!["home"](https://github.com/stan-sk/scheduler/blob/master/docs/appointment-form.png)
+!["delete"](https://github.com/stan-sk/scheduler/blob/master/docs/appointment-form_delete.png)
